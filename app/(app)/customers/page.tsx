@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentBusiness } from "@/lib/business";
+import { PERSONALITY_BY_KEY, type PersonalityKey } from "@/lib/personality";
 
 export default async function CustomersPage({
   searchParams,
@@ -17,7 +18,7 @@ export default async function CustomersPage({
 
   let query = supabase
     .from("customers")
-    .select("id, type, name, company_name, email, phone, country")
+    .select("id, type, name, company_name, email, phone, country, personality")
     .order("created_at", { ascending: false })
     .limit(200);
   if (term) {
@@ -84,6 +85,12 @@ export default async function CustomersPage({
                   <p className="truncate">{c.email ?? "—"}</p>
                   <p className="truncate">{c.phone ?? ""}</p>
                 </div>
+                {c.personality && PERSONALITY_BY_KEY[c.personality as PersonalityKey] && (
+                  <span className="inline-flex items-center gap-1.5 text-xs text-muted">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PERSONALITY_BY_KEY[c.personality as PersonalityKey].color }} />
+                    {PERSONALITY_BY_KEY[c.personality as PersonalityKey].name}
+                  </span>
+                )}
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   c.type === "company" ? "bg-blue-50 text-primary" : "bg-slate-100 text-muted"
                 }`}>

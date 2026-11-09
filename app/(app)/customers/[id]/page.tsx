@@ -31,6 +31,7 @@ export default async function EditCustomerPage({ params }: { params: Promise<{ i
           phone: c.phone ?? "",
           country: c.country ?? "",
           notes: c.notes ?? "",
+          personality: c.personality ?? "",
         }}
       />
     </div>
