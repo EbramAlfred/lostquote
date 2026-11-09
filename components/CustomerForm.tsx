@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ErrorBox, labelClass } from "@/components/AuthCard";
 import { btnGhost, btnPrimary, card, field } from "@/components/ui";
-import { PERSONALITIES, PERSONALITY_BY_KEY, type PersonalityKey } from "@/lib/personality";
+import { PERSONALITIES, PERSONALITY_BY_KEY, loc, type PersonalityKey } from "@/lib/personality";
+import { useLang, useT } from "@/components/LangProvider";
 import { PersonalityTips } from "@/components/PersonalityTips";
 import { PersonalityQuiz } from "@/components/PersonalityQuiz";
 
@@ -46,6 +47,8 @@ export function CustomerForm({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const lang = useLang();
+  const t = useT();
   const [v, setV] = useState<CustomerValues>(initial);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -61,7 +64,7 @@ export function CustomerForm({
     e.preventDefault();
     setError(null);
     if (!v.name.trim()) {
-      setError("Enter the customer's name.");
+      setError(t("form.errName"));
       return;
     }
     setSaving(true);
@@ -83,7 +86,7 @@ export function CustomerForm({
     if (error) {
       setError(
         error.message.includes("customers_email_check")
-          ? "That email address is not valid. Check it and try again."
+          ? t("form.errEmail")
           : error.message
       );
       return;
@@ -102,7 +105,7 @@ export function CustomerForm({
       setConfirming(false);
       setError(
         error.code === "23503"
-          ? "This customer still has quotations. Delete those quotations first, then delete the customer."
+          ? t("form.errHasQuotes")
           : error.message
       );
       return;
@@ -117,57 +120,57 @@ export function CustomerForm({
         <ErrorBox message={error} />
         {!canEdit && (
           <div className="rounded-lg bg-slate-100 px-3 py-2 text-sm text-muted">
-            You have view-only access, so you cannot change customers.
+            {t("form.viewOnly")}
           </div>
         )}
         <fieldset disabled={!canEdit || saving} className="space-y-4">
           <div>
-            <span className={labelClass}>Customer type</span>
+            <span className={labelClass}>{t("form.type")}</span>
             <div className="flex gap-2">
-              {(["individual", "company"] as const).map((t) => (
+              {(["individual", "company"] as const).map((ty) => (
                 <button
                   type="button"
-                  key={t}
-                  onClick={() => set("type", t)}
-                  aria-pressed={v.type === t}
+                  key={ty}
+                  onClick={() => set("type", ty)}
+                  aria-pressed={v.type === ty}
                   className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                    v.type === t ? "border-navy bg-slate-50 text-navy" : "border-slate-300 text-muted hover:border-slate-400"
+                    v.type === ty ? "border-navy bg-slate-50 text-navy" : "border-slate-300 text-muted hover:border-slate-400"
                   }`}
                 >
-                  {t === "individual" ? "Individual" : "Company"}
+                  {ty === "individual" ? t("cust.individual") : t("cust.company")}
                 </button>
               ))}
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="name" className={labelClass}>Name *</label>
+              <label htmlFor="name" className={labelClass}>{t("form.name")}</label>
               <input id="name" required maxLength={160} className={field} value={v.name}
                 onChange={(e) => set("name", e.target.value)} />
             </div>
             <div>
-              <label htmlFor="company" className={labelClass}>Company name</label>
+              <label htmlFor="company" className={labelClass}>{t("form.companyName")}</label>
               <input id="company" className={field} value={v.company_name}
                 onChange={(e) => set("company_name", e.target.value)} />
             </div>
             <div>
-              <label htmlFor="email" className={labelClass}>Email</label>
+              <label htmlFor="email" className={labelClass}>{t("form.email")}</label>
               <input id="email" type="email" className={field} value={v.email}
                 onChange={(e) => set("email", e.target.value)} />
             </div>
             <div>
-              <label htmlFor="phone" className={labelClass}>Phone (with country code)</label>
+              <label htmlFor="phone" className={labelClass}>{t("form.phone")}</label>
               <input id="phone" type="tel" placeholder="+20 100 000 0000" className={field} value={v.phone}
                 onChange={(e) => set("phone", e.target.value)} />
             </div>
             <div>
-              <label htmlFor="country" className={labelClass}>Country</label>
+              <label htmlFor="country" className={labelClass}>{t("form.country")}</label>
               <input id="country" className={field} value={v.country}
                 onChange={(e) => set("country", e.target.value)} />
             </div>
           </div>
           <div>
-            <label htmlFor="notes" className={labelClass}>Notes</label>
+            <label htmlFor="notes" className={labelClass}>{t("form.notes")}</label>
             <textarea id="notes" rows={3} className={field} value={v.notes}
               onChange={(e) => set("notes", e.target.value)} />
           </div>
@@ -177,17 +180,18 @@ export function CustomerForm({
       <div className={`${card} p-5 sm:p-6`}>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="font-semibold text-navy">Communication style</h2>
-            <p className="text-sm text-muted">Pick the style that fits best and get tips on how to talk to this customer.</p>
+            <h2 className="font-semibold text-navy">{t("form.style")}</h2>
+            <p className="text-sm text-muted">{t("form.styleHelp")}</p>
           </div>
           {canEdit && (
             <button type="button" className={btnGhost} onClick={() => setQuiz((q) => !q)}>
-              {quiz ? "Hide quiz" : "Help me decide"}
+              {quiz ? t("form.hideQuiz") : t("form.helpMe")}
             </button>
           )}
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
-          {PERSONALITIES.map((p) => {
+          {PERSONALITIES.map((raw) => {
+            const p = loc(raw, lang);
             const on = v.personality === p.key;
             return (
               <button
@@ -229,16 +233,16 @@ export function CustomerForm({
       <div className="flex flex-wrap items-center gap-3">
         {canEdit && (
           <button type="submit" disabled={saving} className={btnPrimary}>
-            {saving ? "Saving…" : isEdit ? "Save changes" : "Add customer"}
+            {saving ? t("form.saving") : isEdit ? t("form.saveBtn") : t("form.addBtn")}
           </button>
         )}
         <button type="button" onClick={() => router.push("/customers")} className={btnGhost}>
-          {canEdit ? "Cancel" : "Back"}
+          {canEdit ? t("form.cancel") : t("form.back")}
         </button>
         {isEdit && canDelete && (
           <button type="button" onClick={() => setConfirming(true)}
             className="ms-auto rounded-lg px-4 py-2 text-sm font-medium text-danger transition hover:bg-red-50">
-            Delete customer
+            {t("form.delete")}
           </button>
         )}
       </div>
@@ -246,17 +250,17 @@ export function CustomerForm({
       {confirming && (
         <div role="dialog" aria-modal="true" className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold text-navy">Delete this customer?</h2>
+            <h2 className="text-lg font-semibold text-navy">{t("form.deleteTitle")}</h2>
             <p className="mt-2 text-sm text-muted">
-              {initial.name} will be permanently removed. This cannot be undone.
+              {t("form.deleteText", { name: initial.name })}
             </p>
             <div className="mt-5 flex justify-end gap-3">
               <button type="button" onClick={() => setConfirming(false)} className={btnGhost}>
-                Keep customer
+                {t("form.keep")}
               </button>
               <button type="button" onClick={onDelete} disabled={deleting}
                 className="rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">
-                {deleting ? "Deleting…" : "Delete customer"}
+                {deleting ? t("form.deleting") : t("form.delete")}
               </button>
             </div>
           </div>

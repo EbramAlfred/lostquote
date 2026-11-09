@@ -4,7 +4,8 @@ import { getCurrentBusiness } from "@/lib/business";
 import { daysBetween, money, prettyDate, quoteCode, todayIn } from "@/lib/format";
 import { Empty, PageHeader, card } from "@/components/ui";
 import { FollowUpActions } from "@/components/FollowUpActions";
-import { PERSONALITY_BY_KEY, type PersonalityKey } from "@/lib/personality";
+import { PERSONALITY_BY_KEY, loc, type PersonalityKey } from "@/lib/personality";
+import { getLang } from "@/lib/lang";
 
 const TABS = [
   { key: "overdue", label: "Overdue" },
@@ -16,6 +17,7 @@ const TABS = [
 export default async function FollowUpsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const { tab: rawTab } = await searchParams;
   const tab = TABS.some((t) => t.key === rawTab) ? (rawTab as (typeof TABS)[number]["key"]) : "overdue";
+  const lang = await getLang();
   const business = await getCurrentBusiness();
   const supabase = await createClient();
   const today = todayIn(business.timezone);
@@ -84,7 +86,7 @@ export default async function FollowUpsPage({ searchParams }: { searchParams: Pr
           const quo = tk.quotations as unknown as { quote_number: number; title: string; amount: number; currency: string } | null;
           const cu = tk.customers as unknown as { id: string; name: string; personality: PersonalityKey | null } | null;
           const diff = daysBetween(today, tk.due_date);
-          const p = cu?.personality ? PERSONALITY_BY_KEY[cu.personality] : null;
+          const p = cu?.personality ? loc(PERSONALITY_BY_KEY[cu.personality], lang) : null;
           return (
             <li key={tk.id} className={`${card} p-4`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -115,7 +117,7 @@ export default async function FollowUpsPage({ searchParams }: { searchParams: Pr
               </div>
               {p && tk.state === "pending" && (
                 <p className="mt-3 rounded-lg px-3 py-2 text-sm text-[#4a4a4a]" style={{ backgroundColor: p.tint }}>
-                  <span className="font-medium text-navy">{cu?.name} is {p.name}: </span>
+                  <span className="font-medium text-navy">{lang === "ar" ? `${cu?.name}: نمط ${p.name}` : `${cu?.name} is ${p.name}`}: </span>
                   {p.followUp}
                 </p>
               )}

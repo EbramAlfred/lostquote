@@ -25,3 +25,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Arabic: use a proper Arabic typeface and slightly more line height. */
+[dir="rtl"] body {
+  font-family: "Noto Sans Arabic Variable", var(--font-geist-sans), Arial, sans-serif;
+  line-height: 1.7;
+}

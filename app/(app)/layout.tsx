@@ -4,8 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { todayIn } from "@/lib/format";
 import { SignOutButton } from "@/components/SignOutButton";
 import { SidebarNav, MobileNav } from "@/components/Nav";
+import { LangSwitch } from "@/components/LangProvider";
+import { getT } from "@/lib/lang";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const { t } = await getT();
   const business = await getCurrentBusiness();
   const supabase = await createClient();
   const today = todayIn(business.timezone);
@@ -26,8 +29,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <form action="/customers" className="mx-auto hidden w-full max-w-xl sm:block">
           <input
             name="q"
-            aria-label="Search customers"
-            placeholder="Search customers"
+            aria-label={t("top.search")}
+            placeholder={t("top.search")}
             className="w-full rounded-lg bg-white/15 px-3 py-1.5 text-sm text-white outline-none transition placeholder:text-slate-300 focus:bg-white focus:text-navy focus:placeholder:text-muted"
           />
         </form>
@@ -36,6 +39,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold">
             {initial}
           </span>
+          <LangSwitch />
           <SignOutButton />
         </div>
       </header>

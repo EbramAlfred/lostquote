@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useT } from "@/components/LangProvider";
+import type { Key } from "@/lib/i18n";
 
 type IconProps = { className?: string };
 const base = "h-5 w-5 shrink-0";
@@ -42,6 +44,7 @@ const itemClass = (on: boolean) =>
   }`;
 
 export function SidebarNav({ overdue }: { overdue: number }) {
+  const t = useT();
   const pathname = usePathname();
   const analyticsOn = pathname.startsWith("/analytics");
   const [open, setOpen] = useState(true);
@@ -49,13 +52,13 @@ export function SidebarNav({ overdue }: { overdue: number }) {
   return (
     <nav className="space-y-0.5 p-3" aria-label="Main">
       <Link href="/dashboard" className={itemClass(pathname === "/dashboard")}>
-        <Icons.home /> Home
+        <Icons.home /> {t("nav.home")}
       </Link>
       <Link href="/quotations" className={itemClass(active(pathname, "/quotations"))}>
-        <Icons.quote /> Quotations
+        <Icons.quote /> {t("nav.quotations")}
       </Link>
       <Link href="/follow-ups" className={itemClass(active(pathname, "/follow-ups"))}>
-        <Icons.bell /> Follow-ups
+        <Icons.bell /> {t("nav.followups")}
         {overdue > 0 && (
           <span className="ms-auto rounded-full bg-danger px-2 py-0.5 text-[11px] font-semibold text-white">
             {overdue}
@@ -63,7 +66,7 @@ export function SidebarNav({ overdue }: { overdue: number }) {
         )}
       </Link>
       <Link href="/customers" className={itemClass(active(pathname, "/customers"))}>
-        <Icons.users /> Customers
+        <Icons.users /> {t("nav.customers")}
       </Link>
 
       <div>
@@ -73,7 +76,7 @@ export function SidebarNav({ overdue }: { overdue: number }) {
           aria-expanded={open}
           className={`${itemClass(analyticsOn && !open)} w-full`}
         >
-          <Icons.chart /> Analytics
+          <Icons.chart /> {t("nav.analytics")}
           <Icons.chevron className={`ms-auto h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {open && (
@@ -84,31 +87,32 @@ export function SidebarNav({ overdue }: { overdue: number }) {
                 pathname === "/analytics" ? "bg-white text-navy shadow-[0_1px_0_rgba(0,0,0,.06)]" : "text-[#4a4a4a] hover:bg-black/[.05]"
               }`}
             >
-              Dashboard
+              {t("nav.dashboard")}
             </Link>
           </div>
         )}
       </div>
 
       <div className="pt-3">
-        <p className="px-3 pb-1 text-xs font-medium text-muted">Sales skills</p>
+        <p className="px-3 pb-1 text-xs font-medium text-muted">{t("nav.salesSkills")}</p>
         <Link href="/personality" className={itemClass(active(pathname, "/personality"))}>
-          <Icons.mind /> Client types
+          <Icons.mind /> {t("nav.clientTypes")}
         </Link>
       </div>
     </nav>
   );
 }
 
-const MOBILE = [
-  { href: "/dashboard", label: "Home", icon: Icons.home },
-  { href: "/quotations", label: "Quotes", icon: Icons.quote },
-  { href: "/follow-ups", label: "Follow-ups", icon: Icons.bell },
-  { href: "/customers", label: "Customers", icon: Icons.users },
-  { href: "/analytics", label: "Analytics", icon: Icons.chart },
+const MOBILE: { href: string; label: Key; icon: typeof Icons.home }[] = [
+  { href: "/dashboard", label: "nav.home", icon: Icons.home },
+  { href: "/quotations", label: "nav.quotesShort", icon: Icons.quote },
+  { href: "/follow-ups", label: "nav.followups", icon: Icons.bell },
+  { href: "/customers", label: "nav.customers", icon: Icons.users },
+  { href: "/analytics", label: "nav.analytics", icon: Icons.chart },
 ];
 
 export function MobileNav({ overdue }: { overdue: number }) {
+  const t = useT();
   const pathname = usePathname();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-black/10 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden" aria-label="Main">
@@ -119,7 +123,7 @@ export function MobileNav({ overdue }: { overdue: number }) {
           <Link key={i.href} href={i.href}
             className={`relative flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${on ? "text-navy" : "text-muted"}`}>
             <Icon className="h-5 w-5" />
-            {i.label}
+            {t(i.label)}
             {i.href === "/follow-ups" && overdue > 0 && (
               <span className="absolute end-[22%] top-1 h-2 w-2 rounded-full bg-danger" />
             )}
