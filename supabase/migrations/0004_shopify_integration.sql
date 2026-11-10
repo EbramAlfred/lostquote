@@ -1,0 +1,5 @@
+-- Already applied to the live project. Kept here so the repo matches the database.
+-- shopify_shops and shopify_link_codes are server-only (RLS on, no grants to anon/authenticated).
+-- my_shopify_connection() returns the connected store (no tokens) to business members.
+-- customers.shopify_customer_id and quotations.shopify_draft_order_id (unique per business) make re-imports update instead of duplicate.
+-- Full SQL: see the migration named "shopify_integration" in the Supabase project.

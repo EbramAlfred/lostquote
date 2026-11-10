@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Only the Shopify entry page may be shown inside the Shopify admin iframe.
+  async headers() {
+    return [
+      {
+        source: "/shopify",
+        headers: [
+          { key: "Content-Security-Policy", value: "frame-ancestors https://admin.shopify.com https://*.myshopify.com;" },
+        ],
+      },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

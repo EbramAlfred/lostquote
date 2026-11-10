@@ -1,0 +1,24 @@
+# Shopify app configuration. Fill in client_id after creating the app in the Partner Dashboard,
+# then run:  shopify app deploy   (or paste these values into the dashboard by hand).
+name = "LostQuote"
+client_id = "REPLACE_WITH_CLIENT_ID"
+application_url = "https://lostquote.vercel.app/shopify"
+embedded = true
+
+[access_scopes]
+# Read-only: customers and draft orders (Shopify's version of quotes).
+scopes = "read_customers,read_draft_orders"
+
+[auth]
+redirect_urls = ["https://lostquote.vercel.app/auth/callback"]
+
+[webhooks]
+api_version = "2026-04"
+
+  [[webhooks.subscriptions]]
+  topics = ["app/uninstalled"]
+  uri = "https://lostquote.vercel.app/api/shopify/webhooks"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+  uri = "https://lostquote.vercel.app/api/shopify/webhooks"

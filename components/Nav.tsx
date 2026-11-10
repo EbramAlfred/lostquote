@@ -29,6 +29,9 @@ const Icons = {
   mind: ({ className = base }: IconProps) => (
     <svg viewBox="0 0 24 24" className={className} {...stroke}><circle cx="12" cy="12" r="9" /><path d="M8.5 14.5s1.3 2 3.5 2 3.5-2 3.5-2M9 9.5h.01M15 9.5h.01" /></svg>
   ),
+  bag: ({ className = base }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} {...stroke}><path d="M5 8h14l-1 12H6z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
+  ),
   chevron: ({ className = "h-4 w-4" }: IconProps) => (
     <svg viewBox="0 0 24 24" className={className} {...stroke}><path d="M6 9l6 6 6-6" /></svg>
   ),
@@ -97,6 +100,13 @@ export function SidebarNav({ overdue }: { overdue: number }) {
         <p className="px-3 pb-1 text-xs font-medium text-muted">{t("nav.salesSkills")}</p>
         <Link href="/personality" className={itemClass(active(pathname, "/personality"))}>
           <Icons.mind /> {t("nav.clientTypes")}
+        </Link>
+      </div>
+
+      <div className="pt-3">
+        <p className="px-3 pb-1 text-xs font-medium text-muted">{t("nav.integrations")}</p>
+        <Link href="/settings/shopify" className={itemClass(active(pathname, "/settings/shopify"))}>
+          <Icons.bag /> {t("nav.shopify")}
         </Link>
       </div>
     </nav>

@@ -12,6 +12,8 @@ const D = {
   "nav.dashboard": { en: "Dashboard", ar: "لوحة المعلومات" },
   "nav.salesSkills": { en: "Sales skills", ar: "مهارات البيع" },
   "nav.clientTypes": { en: "Client types", ar: "أنماط العملاء" },
+  "nav.integrations": { en: "Integrations", ar: "التكاملات" },
+  "nav.shopify": { en: "Shopify", ar: "شوبيفاي" },
   "nav.quotesShort": { en: "Quotes", ar: "العروض" },
   "top.search": { en: "Search customers", ar: "ابحث في العملاء" },
   "top.signOut": { en: "Sign out", ar: "تسجيل الخروج" },
@@ -87,6 +89,24 @@ const D = {
   "quiz.close": { en: "It is close between {a}. Watch a bit longer, then pick the one that fits best.", ar: "النتيجة متقاربة بين {a}. راقب قليلًا ثم اختر الأنسب." },
   "quiz.use": { en: "Use {a} for this customer", ar: "استخدم نمط {a} لهذا العميل" },
   "quiz.again": { en: "Start over", ar: "ابدأ من جديد" },
+
+  // shopify settings
+  "shop.title": { en: "Shopify", ar: "شوبيفاي" },
+  "shop.subtitle": { en: "Import your Shopify customers and draft orders so you can follow up on them.", ar: "استورد عملاءك وطلبات المسودة من شوبيفاي لتتمكن من متابعتهم." },
+  "shop.connected": { en: "Connected store", ar: "المتجر المتصل" },
+  "shop.lastSync": { en: "Last import", ar: "آخر استيراد" },
+  "shop.never": { en: "Not imported yet", ar: "لم يتم الاستيراد بعد" },
+  "shop.sync": { en: "Import from Shopify now", ar: "استورد من شوبيفاي الآن" },
+  "shop.syncing": { en: "Importing…", ar: "جارٍ الاستيراد…" },
+  "shop.notConnected": { en: "No Shopify store is connected yet.", ar: "لم يتم ربط أي متجر شوبيفاي بعد." },
+  "shop.howTo": { en: "Install LostQuote from your Shopify admin (Apps), open it there, and press “Link to my LostQuote account”.", ar: "ثبّت LostQuote من لوحة تحكم شوبيفاي (التطبيقات)، وافتحه هناك، ثم اضغط «ربط بحسابي في LostQuote»." },
+  "shop.uninstalled": { en: "The app was removed from this Shopify store. Install it again to reconnect.", ar: "تمت إزالة التطبيق من متجر شوبيفاي هذا. ثبّته مجددًا لإعادة الربط." },
+  "shop.draftNote": { en: "Shopify draft orders become quotations: open drafts are Draft, invoiced drafts are Sent, completed drafts are Won.", ar: "تتحول طلبات المسودة في شوبيفاي إلى عروض أسعار: المسودة المفتوحة «مسودة»، والمفوترة «مُرسل»، والمكتملة «ناجح»." },
+  "shop.result": { en: "Imported: {cc} new customers, {cu} updated, {qc} new quotations, {qu} updated.", ar: "تم الاستيراد: {cc} عميل جديد، {cu} محدّث، {qc} عرض سعر جديد، {qu} محدّث." },
+  "shop.skipped": { en: "{n} draft orders were skipped because they have no customer.", ar: "تم تخطي {n} من طلبات المسودة لأنها بلا عميل." },
+  "shop.truncated": { en: "Only the latest 250 customers and 250 draft orders were imported. Run the import again later for more.", ar: "تم استيراد آخر 250 عميلًا و250 طلب مسودة فقط. أعد الاستيراد لاحقًا للمزيد." },
+  "shop.failed": { en: "{n} items could not be imported. First error: {e}", ar: "تعذر استيراد {n} عنصر. أول خطأ: {e}" },
+  "shop.error": { en: "The import failed", ar: "فشل الاستيراد" },
 } as const;
 
 export type Key = keyof typeof D;
